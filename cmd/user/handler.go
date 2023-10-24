@@ -2,7 +2,11 @@ package main
 
 import (
 	"context"
+	"github.com/benxinm/tiktok/cmd/user/pack"
+	"github.com/benxinm/tiktok/cmd/user/service"
 	user "github.com/benxinm/tiktok/kitex_gen/user"
+	"github.com/benxinm/tiktok/pkg/myerrors"
+	"github.com/benxinm/tiktok/pkg/utils"
 )
 
 // UserServiceImpl implements the last service interface defined in the IDL.
@@ -10,7 +14,27 @@ type UserServiceImpl struct{}
 
 // Register implements the UserServiceImpl interface.
 func (s *UserServiceImpl) Register(ctx context.Context, req *user.RegisterRequest) (resp *user.RegisterResponse, err error) {
-	// TODO: Your code here...
+	resp = new(user.RegisterResponse)
+
+	if len(req.Username) == 0 || len(req.Username) > 255 || len(req.Password) == 0 || len(req.Password) > 255 {
+		resp.Base = pack.MakeBaseResp(myerrors.ParamError)
+		return resp, nil
+	}
+	userService := service.NewUserService(ctx)
+	userResp, err := userService.CreateUser(req)
+
+	if err != nil {
+		resp.Base = pack.MakeBaseResp(err)
+		return resp, err
+	}
+	token, err := utils.GenToken(userResp.Id)
+	if err != nil {
+		resp.Base = pack.MakeBaseResp(err)
+		return resp, nil
+	}
+	resp.Base = pack.MakeBaseResp(nil)
+	resp.UserId = userResp.Id
+	resp.Token = token
 	return
 }
 

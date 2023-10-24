@@ -12,4 +12,6 @@ const (
 	MaxQPS             = 100
 	MaxIdleConnections = 10
 	ConnMaxLifetime    = 10 * time.Second
+	//jwt
+	JwtSecrete = "jwt_secrete"
 )

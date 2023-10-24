@@ -8,9 +8,9 @@ require (
 	github.com/apache/thrift v0.13.0
 	github.com/cloudwego/kitex v0.7.3
 	gorm.io/driver/mysql v1.5.1
-    gorm.io/gorm v1.25.3
-    gorm.io/hints v1.1.2
-   	gorm.io/plugin/opentracing v0.0.0-20211220013347-7d2b2af23560
+	gorm.io/gorm v1.25.3
+	gorm.io/hints v1.1.2
+	gorm.io/plugin/opentracing v0.0.0-20211220013347-7d2b2af23560
 )
 
 require (
@@ -28,6 +28,7 @@ require (
 	github.com/cloudwego/thriftgo v0.3.2-0.20230828085742-edaddf2c17af // indirect
 	github.com/davecgh/go-spew v1.1.2-0.20180830191138-d8f796af33cc // indirect
 	github.com/fatih/structtag v1.2.0 // indirect
+	github.com/golang-jwt/jwt/v5 v5.0.0 // indirect
 	github.com/golang/protobuf v1.5.2 // indirect
 	github.com/google/pprof v0.0.0-20220608213341-c488b8fa1db3 // indirect
 	github.com/iancoleman/strcase v0.2.0 // indirect
