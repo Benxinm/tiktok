@@ -40,12 +40,52 @@ func (s *UserServiceImpl) Register(ctx context.Context, req *user.RegisterReques
 
 // Login implements the UserServiceImpl interface.
 func (s *UserServiceImpl) Login(ctx context.Context, req *user.LoginRequest) (resp *user.LoginResponse, err error) {
-	// TODO: Your code here...
+	resp = new(user.LoginResponse)
+	if len(req.Username) == 0 || len(req.Username) > 255 || len(req.Password) == 0 || len(req.Password) > 255 {
+		resp.Base = pack.MakeBaseResp(myerrors.ParamError)
+		return resp, nil
+	}
+
+	userService := service.NewUserService(ctx)
+	userResp, err := userService.UserLogin(req)
+
+	if err != nil {
+		resp.Base = pack.MakeBaseResp(err)
+		return resp, nil
+	}
+	token, err := utils.GenToken(userResp.Id)
+	if err != nil {
+		resp.Base = pack.MakeBaseResp(err)
+		return resp, nil
+	}
+
+	resp.Base = pack.MakeBaseResp(nil)
+	resp.User = pack.User(userResp)
+	resp.Token = token
 	return
 }
 
 // Info implements the UserServiceImpl interface.
 func (s *UserServiceImpl) Info(ctx context.Context, req *user.InfoRequest) (resp *user.InfoResponse, err error) {
-	// TODO: Your code here...
+	resp = new(user.InfoResponse)
+
+	if req.UserId < 10000 {
+		resp.Base = pack.MakeBaseResp(myerrors.ParamError)
+		return resp, nil
+	}
+	if _, err := utils.VerifyToken(req.Token); err != nil {
+		resp.Base = pack.MakeBaseResp(myerrors.AuthFailedError)
+		return resp, nil
+	}
+	userService := service.NewUserService(ctx)
+	userResp, err := userService.GetUser(req)
+
+	if err != nil {
+		resp.Base = pack.MakeBaseResp(err)
+		return resp, nil
+	}
+
+	resp.Base = pack.MakeBaseResp(nil)
+	resp.User = userResp
 	return
 }

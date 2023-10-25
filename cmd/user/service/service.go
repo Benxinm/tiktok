@@ -15,6 +15,7 @@ func NewUserService(ctx context.Context) *UserService {
 		}
 		return userService
 	} else {
+		userService.ctx = ctx
 		return userService
 	}
 }

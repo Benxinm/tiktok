@@ -25,3 +25,16 @@ func GenToken(userId int64) (string, error) {
 	token, err := jwt.NewWithClaims(jwt.SigningMethodHS256, claims).SignedString([]byte(constants.JwtSecrete))
 	return token, err
 }
+
+func VerifyToken(token string) (*UserClaim, error) {
+	resp, err := jwt.ParseWithClaims(token, &UserClaim{}, func(token *jwt.Token) (interface{}, error) {
+		return []byte(constants.JwtSecrete), nil
+	})
+	if err != nil {
+		return nil, err
+	}
+	if claim, ok := resp.Claims.(*UserClaim); ok && resp.Valid {
+		return claim, err
+	}
+	return nil, err
+}

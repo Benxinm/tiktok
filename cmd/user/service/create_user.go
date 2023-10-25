@@ -5,10 +5,10 @@ import (
 	"github.com/benxinm/tiktok/kitex_gen/user"
 )
 
-func (s *UserService) CreateUser(req *user.RegisterRequest) (*db.User, error) {
+func (service *UserService) CreateUser(req *user.RegisterRequest) (*db.User, error) {
 	user := &db.User{
 		Username: req.Username,
 		Password: req.Password,
 	}
-	return db.CreateUser(s.ctx, user)
+	return db.CreateUser(service.ctx, user)
 }
