@@ -9,6 +9,7 @@ require (
 	github.com/cloudwego/kitex v0.7.3
 	gorm.io/driver/mysql v1.5.1
 	gorm.io/gorm v1.25.3
+	github.com/redis/go-redis/v9 v9.0.5
 	gorm.io/hints v1.1.2
 	gorm.io/plugin/opentracing v0.0.0-20211220013347-7d2b2af23560
 )
