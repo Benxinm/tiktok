@@ -2,7 +2,10 @@ package main
 
 import (
 	"context"
+	"github.com/benxinm/tiktok/cmd/video/pack"
 	video "github.com/benxinm/tiktok/kitex_gen/video"
+	"github.com/benxinm/tiktok/pkg/myerrors"
+	"github.com/benxinm/tiktok/pkg/utils"
 )
 
 // VideoServiceImpl implements the last service interface defined in the IDL.
@@ -10,7 +13,12 @@ type VideoServiceImpl struct{}
 
 // Feed implements the VideoServiceImpl interface.
 func (s *VideoServiceImpl) Feed(ctx context.Context, req *video.FeedRequest) (resp *video.FeedResponse, err error) {
-	// TODO: Your code here...
+	resp = new(video.FeedResponse)
+	if _, err := utils.VerifyToken(req.Token); err != nil {
+		resp.Base = pack.MakeBaseResp(myerrors.AuthFailedError)
+		return resp, err
+	}
+
 	return
 }
 

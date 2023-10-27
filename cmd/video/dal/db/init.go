@@ -36,6 +36,6 @@ func Init() {
 	sqlDB.SetMaxOpenConns(constants.MaxConnections)
 	sqlDB.SetConnMaxLifetime(constants.ConnMaxLifetime)
 
-	DB = DB.Table(constants.UserTableName)
+	DB = DB.Table(constants.VideoTableName)
 
 }

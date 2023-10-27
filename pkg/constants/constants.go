@@ -5,8 +5,8 @@ import "time"
 const (
 	UserServiceName = "user"
 	//mysql table name
-	UserTableName = "user"
-
+	UserTableName  = "user"
+	VideoTableName = "video"
 	//limit
 	MaxConnections     = 1000
 	MaxQPS             = 100
