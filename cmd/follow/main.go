@@ -1,8 +1,8 @@
 package main
 
 import (
+	follow "github.com/benxinm/tiktok/kitex_gen/follow/followservice"
 	"log"
-	follow "tiktok/cmd/follow/kitex_gen/follow/followservice"
 )
 
 func main() {

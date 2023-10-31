@@ -2,7 +2,7 @@ package main
 
 import (
 	"context"
-	follow "tiktok/cmd/follow/kitex_gen/follow"
+	follow "github.com/benxinm/tiktok/kitex_gen/follow"
 )
 
 // FollowServiceImpl implements the last service interface defined in the IDL.

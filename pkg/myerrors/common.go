@@ -9,4 +9,6 @@ var (
 	UserExistedError  = NewMyError(ParamErrorCode, "user already existed")
 	UserNotFoundError = NewMyError(InternalErrorCode, "user not found")
 	AuthFailedError   = NewMyError(AuthFailedErrorCode, "auth failed")
+	//Follow
+	FollowNotFoundError = NewMyError(InternalErrorCode, "follow not found but exec unfollow")
 )
