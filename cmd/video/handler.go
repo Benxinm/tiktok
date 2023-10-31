@@ -55,7 +55,7 @@ func (s *VideoServiceImpl) PutVideo(ctx context.Context, req *video.PutVideoRequ
 		return nil
 	})
 
-	eg.Go(func() error {
+	eg.Go(func() error { //TODO endpoint should get from config file
 		playUrl := fmt.Sprintf("https://%s/%s/%s", "endpoint", "direction", videoName)
 		coverUrl := fmt.Sprintf("https://%s/%s/%s", "endpoint", "direction", coverName)
 		_, err = service.NewVideoService(ctx).Create(req, claim.UserId, playUrl, coverUrl)
