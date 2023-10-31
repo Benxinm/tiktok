@@ -2,10 +2,12 @@ package service
 
 import (
 	"context"
+	"github.com/aliyun/aliyun-oss-go-sdk/oss"
 )
 
 type VideoService struct {
-	ctx context.Context
+	ctx    context.Context
+	bucket *oss.Bucket
 }
 
 var videoService *VideoService
@@ -20,5 +22,4 @@ func NewVideoService(ctx context.Context) *VideoService {
 		videoService.ctx = ctx
 		return videoService
 	}
-	return
 }

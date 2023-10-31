@@ -1,9 +1,11 @@
 package pack
 
 import (
+	"fmt"
 	"github.com/benxinm/tiktok/cmd/video/dal/db"
 	"github.com/benxinm/tiktok/kitex_gen/user"
 	"github.com/benxinm/tiktok/kitex_gen/video"
+	"time"
 )
 
 func Video(data *db.Video, user *user.User, favourites int64, comments int64, isFavourite bool) *video.Video {
@@ -40,4 +42,17 @@ func VideoList(data []db.Video, userList []*user.User, favoriteCountList []int64
 		videoList = append(videoList, Video(&data[i], userList[i], favoriteCountList[i], commentCountList[i], isFavoriteList[i]))
 	}
 	return videoList
+}
+
+func GenVideoName(userId int64) string {
+	currentTime := time.Now()
+	year, month, day := currentTime.Date()
+	hour, minute := currentTime.Hour(), currentTime.Minute()
+	return fmt.Sprintf("%v_%d%02d%02d_%02d%02d_video.mp4", userId, year, month, day, hour, minute)
+}
+func GenCoverName(userId int64) string {
+	currentTime := time.Now()
+	year, month, day := currentTime.Date()
+	hour, minute := currentTime.Hour(), currentTime.Minute()
+	return fmt.Sprintf("%v_%d%02d%02d_%02d%02d_cover.jpg", userId, year, month, day, hour, minute)
 }
