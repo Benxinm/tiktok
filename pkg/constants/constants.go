@@ -15,4 +15,8 @@ const (
 	ConnMaxLifetime    = 10 * time.Second
 	//jwt
 	JwtSecrete = "jwt_secrete"
+	//RPC
+	MuxConnection     = 1
+	RPCTimeout        = 3 * time.Second
+	ConnectionTimeout = time.Second
 )
