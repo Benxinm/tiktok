@@ -76,13 +76,38 @@ func (s *VideoServiceImpl) PutVideo(ctx context.Context, req *video.PutVideoRequ
 
 // GetFavoriteVideoInfo implements the VideoServiceImpl interface.
 func (s *VideoServiceImpl) GetFavoriteVideoInfo(ctx context.Context, req *video.GetFavoriteVideoInfoRequest) (resp *video.GetFavoriteVideoInfoResponse, err error) {
-	// TODO: Your code here...
+	resp = new(video.GetFavoriteVideoInfoResponse)
+	if len(req.VideoId) == 0 {
+		resp.Base = pack.MakeBaseResp(myerrors.ParamError)
+		return resp, nil
+	}
+	if _, err := utils.VerifyToken(req.Token); err != nil {
+		resp.Base = pack.MakeBaseResp(myerrors.AuthFailedError)
+		return resp, nil
+	}
+	//videoList,userList/
 	return
 }
 
 // GetPublishList implements the VideoServiceImpl interface.
 func (s *VideoServiceImpl) GetPublishList(ctx context.Context, req *video.GetPublishListRequest) (resp *video.GetPublishListResponse, err error) {
-	// TODO: Your code here...
+	resp = new(video.GetPublishListResponse)
+	if _, err := utils.VerifyToken(req.Token); err != nil {
+		resp.Base = pack.MakeBaseResp(myerrors.AuthFailedError)
+		return resp, nil
+	}
+	if req.UserId < 10000 {
+		resp.Base = pack.MakeBaseResp(myerrors.ParamError)
+		return resp, nil
+	}
+	videoList, err := service.NewVideoService(ctx).GetPublishVideoInfo(req)
+	if err != nil {
+		klog.Error(err)
+		resp.Base = pack.MakeBaseResp(err)
+		return resp, nil
+	}
+	resp.Base = pack.MakeBaseResp(nil)
+	resp.ListVideo = videoList
 	return
 }
 
