@@ -85,6 +85,7 @@ func (s *VideoServiceImpl) GetFavoriteVideoInfo(ctx context.Context, req *video.
 		resp.Base = pack.MakeBaseResp(myerrors.AuthFailedError)
 		return resp, nil
 	}
+
 	//videoList,userList/
 	return
 }
