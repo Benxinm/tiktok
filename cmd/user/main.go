@@ -2,6 +2,7 @@ package main
 
 import (
 	"github.com/benxinm/tiktok/cmd/user/dal"
+	"github.com/benxinm/tiktok/cmd/user/rpc"
 	user "github.com/benxinm/tiktok/kitex_gen/user/userservice"
 	"github.com/benxinm/tiktok/pkg/constants"
 	"github.com/cloudwego/kitex/pkg/limit"
@@ -11,10 +12,12 @@ import (
 )
 
 func Init() {
+	rpc.Init()
 	dal.Init()
 }
 
 func main() {
+	Init()
 	//addr ,err := net.ResolveTCPAddr("tcp",)
 	svr := user.NewServer(
 		new(UserServiceImpl),

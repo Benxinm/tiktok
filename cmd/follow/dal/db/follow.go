@@ -62,7 +62,7 @@ func UnFollowAction(ctx context.Context, follow *Follow) error {
 	return nil
 }
 
-func FollowList(ctx context.Context, uid int64) (*[]int64, error) {
+func FollowList(ctx context.Context, uid int64) ([]int64, error) {
 	var followList []int64
 
 	err := DB.WithContext(ctx).Table(constants.FollowTableName).Select("to_user_id").Where("user_id = ? AND status = ?", uid, 0).Find(&followList).Error
@@ -74,7 +74,7 @@ func FollowList(ctx context.Context, uid int64) (*[]int64, error) {
 		return nil, gorm.ErrRecordNotFound
 	}
 
-	return &followList, nil
+	return followList, nil
 }
 
 func FollowerList(ctx context.Context, uid int64) (*[]int64, error) {
