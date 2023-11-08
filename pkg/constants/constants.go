@@ -6,9 +6,10 @@ const (
 	UserServiceName  = "user"
 	VideoServiceName = "video"
 	//mysql table name
-	UserTableName   = "user"
-	VideoTableName  = "video"
-	FollowTableName = "follow"
+	UserTableName    = "user"
+	VideoTableName   = "video"
+	FollowTableName  = "follow"
+	CommentTableName = "comment"
 	//Redis
 	FollowRedis = 1
 	//limit
