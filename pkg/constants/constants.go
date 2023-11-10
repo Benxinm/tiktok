@@ -6,12 +6,14 @@ const (
 	UserServiceName  = "user"
 	VideoServiceName = "video"
 	//mysql table name
-	UserTableName    = "user"
-	VideoTableName   = "video"
-	FollowTableName  = "follow"
-	CommentTableName = "comment"
+	UserTableName     = "user"
+	VideoTableName    = "video"
+	FollowTableName   = "follow"
+	CommentTableName  = "comment"
+	FavoriteTableName = "favorite"
 	//Redis
 	FollowRedis = 1
+
 	//limit
 	MaxConnections     = 1000
 	MaxQPS             = 100

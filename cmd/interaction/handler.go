@@ -2,7 +2,7 @@ package main
 
 import (
 	"context"
-	interaction "github.com/benxinm/tiktok/cmd/interaction/kitex_gen/interaction"
+	interaction "github.com/benxinm/tiktok/kitex_gen/interaction"
 )
 
 // InteractionServiceImpl implements the last service interface defined in the IDL.
