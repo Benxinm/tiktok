@@ -1,7 +1,7 @@
 package main
 
 import (
-	interaction "github.com/benxinm/tiktok/cmd/interaction/kitex_gen/interaction/interactionservice"
+	interaction "github.com/benxinm/tiktok/kitex_gen/interaction/interactionservice"
 	"log"
 )
 
