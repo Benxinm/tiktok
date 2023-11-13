@@ -3,7 +3,6 @@ package cache
 import (
 	"context"
 	"fmt"
-	"github.com/redis/go-redis/v9"
 	"strconv"
 	"time"
 )
@@ -62,16 +61,21 @@ func ReduceVideoLikeCount(ctx context.Context, vid int64, uid int64) error {
 	return err
 }
 
-func GetVideoLikeCount(ctx context.Context, vid int64) (bool, int64, error) {
-	count, err := RedisClient.Get(ctx, VideoFavoriteCountKey(vid)).Result()
-	if err == redis.Nil {
-		return false, 0, err
-	}
+func SetVideoLikeCount(ctx context.Context, vid int64, count int64) error {
+	err := RedisClient.Set(ctx, VideoFavoriteCountKey(vid), count, time.Hour).Err()
 	if err != nil {
-		return true, 0, err
+		return err
+	}
+	return nil
+}
+
+func GetVideoLikeCount(ctx context.Context, vid int64) (int64, error) {
+	count, err := RedisClient.Get(ctx, VideoFavoriteCountKey(vid)).Result()
+	if err != nil {
+		return 0, err
 	}
 	likes, _ := strconv.ParseInt(count, 10, 64)
-	return true, likes, nil
+	return likes, nil
 }
 
 func GetUserFavoriteVideos(ctx context.Context, uid int64) ([]int64, error) {

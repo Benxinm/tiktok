@@ -18,9 +18,15 @@ type Favorite struct {
 	DeletedAt gorm.DeletedAt `gorm:"index"`
 }
 
+func IsFavorited(ctx context.Context, uid int64, vid int64, status int64) error {
+	var fav Favorite
+	return DB.Table(constants.FavoriteTableName).WithContext(ctx).
+		Where("user_id = ? AND video_id = ? AND status = ?", uid, vid, status).First(&fav).Error
+}
+
 func IsFavoriteExist(ctx context.Context, uid int64, vid int64) (bool, error) {
 	var resp Favorite
-	err := DB.Table(constants.FavoriteTableName).WithContext(ctx).Where("user_id = ? and video_id = ? and status = ?", uid, vid).First(&resp).Error
+	err := DB.Table(constants.FavoriteTableName).WithContext(ctx).Where("user_id = ? and video_id = ? and status = 1", uid, vid).First(&resp).Error
 	if err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
 			return false, nil

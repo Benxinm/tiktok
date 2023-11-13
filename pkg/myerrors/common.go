@@ -11,4 +11,6 @@ var (
 	AuthFailedError   = NewMyError(AuthFailedErrorCode, "auth failed")
 	//Follow
 	FollowNotFoundError = NewMyError(InternalErrorCode, "follow not found but exec unfollow")
+	//Interaction
+	CommentNotFoundError = NewMyError(InternalErrorCode, "comments not found")
 )
