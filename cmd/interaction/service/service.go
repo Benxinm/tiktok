@@ -8,7 +8,7 @@ type InteractionService struct {
 
 var interactionService *InteractionService
 
-func NewUserService(ctx context.Context) *InteractionService {
+func NewInteractionService(ctx context.Context) *InteractionService {
 	if interactionService == nil {
 		interactionService = &InteractionService{
 			ctx: ctx,

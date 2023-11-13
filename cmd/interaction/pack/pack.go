@@ -2,11 +2,11 @@ package pack
 
 import (
 	"errors"
-	"github.com/benxinm/tiktok/kitex_gen/user"
+	"github.com/benxinm/tiktok/kitex_gen/interaction"
 	"github.com/benxinm/tiktok/pkg/myerrors"
 )
 
-func MakeBaseResp(err error) *user.BaseResp {
+func MakeBaseResp(err error) *interaction.BaseResp {
 	if err == nil {
 		return baseResp(myerrors.Success)
 	}
@@ -18,8 +18,8 @@ func MakeBaseResp(err error) *user.BaseResp {
 	return baseResp(s)
 }
 
-func baseResp(err myerrors.MyError) *user.BaseResp {
-	return &user.BaseResp{
+func baseResp(err myerrors.MyError) *interaction.BaseResp {
+	return &interaction.BaseResp{
 		Code: err.ErrorCode,
 		Msg:  err.ErrorMsg,
 	}
