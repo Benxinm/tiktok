@@ -11,6 +11,8 @@ const (
 	FollowTableName   = "follow"
 	CommentTableName  = "comment"
 	FavoriteTableName = "favorite"
+	ChatTableName     = "chat"
+	MessageTableName  = "message"
 	//Redis
 	FollowRedis = 1
 

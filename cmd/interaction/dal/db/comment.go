@@ -14,7 +14,7 @@ type Comment struct {
 	Content   string `json:"content"`
 	CreatedAt time.Time
 	UpdatedAt time.Time
-	DeletedAt gorm.DeletedAt `gorm:"index" msg:"-"`
+	DeletedAt gorm.DeletedAt `gorm:"index"`
 }
 
 func CreateComment(ctx context.Context, comment *Comment) (*Comment, error) {
@@ -58,5 +58,3 @@ func CountCommentsByVideoId(ctx context.Context, videoId int64) (int64, error) {
 	}
 	return count, nil
 }
-
-
