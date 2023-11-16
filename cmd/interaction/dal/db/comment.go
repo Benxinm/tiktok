@@ -18,6 +18,7 @@ type Comment struct {
 }
 
 func CreateComment(ctx context.Context, comment *Comment) (*Comment, error) {
+	comment.Id = SF.NextVal()
 	if err := DB.Table(constants.CommentTableName).WithContext(ctx).Create(comment).Error; err != nil {
 		return nil, err
 	}

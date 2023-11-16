@@ -35,7 +35,7 @@ func FollowAction(ctx context.Context, follow *Follow) error {
 	resp := new(Follow)
 	err := DB.WithContext(ctx).Model(&Follow{}).Where("user_id= ? AND to_user_id = ?", follow.UserId, follow.ToUserId).First(&resp).Error
 	if errors.Is(err, gorm.ErrRecordNotFound) {
-		//follow.Id = SF.NextVal()
+		follow.Id = SF.NextVal()
 		follow.Status = 0
 		return DB.WithContext(ctx).Create(follow).Error
 	} else if err != nil {
