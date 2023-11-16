@@ -6,6 +6,8 @@ import (
 	"time"
 )
 
+//TODO 考虑删除cache
+
 func CreateMessage(ctx context.Context, key string, revkey string, stamp_key int64, field string) error {
 	// 先判断是否key是否存在，如果存在则判断过期时间是否小于十天，小于则加时间，大于则不加时间
 	if ok := MessageExist(ctx, key); ok != 0 {

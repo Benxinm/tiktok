@@ -18,7 +18,7 @@ type Video struct {
 }
 
 func CreateVideo(ctx context.Context, video *Video) (*Video, error) {
-	//video.Id = SF.NextVal()
+	video.Id = SF.NextVal()
 	if err := DB.WithContext(ctx).Create(video).Error; err != nil {
 		return nil, err
 	}

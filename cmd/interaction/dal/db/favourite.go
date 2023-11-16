@@ -38,7 +38,7 @@ func IsFavoriteExist(ctx context.Context, uid int64, vid int64) (bool, error) {
 }
 
 func CreateFavorite(ctx context.Context, favorite *Favorite) error {
-	//favorite.ID = SF.NextVal()
+	favorite.ID = SF.NextVal()
 	return DB.Table(constants.FavoriteTableName).WithContext(ctx).Create(favorite).Error
 }
 func UpdateFavoriteStatus(ctx context.Context, uid int64, vid int64, status int64) error {

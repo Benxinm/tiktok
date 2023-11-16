@@ -2,6 +2,7 @@ package rpc
 
 import (
 	"context"
+	"github.com/benxinm/tiktok/config"
 	"github.com/benxinm/tiktok/kitex_gen/user"
 	"github.com/benxinm/tiktok/kitex_gen/user/userservice"
 	"github.com/benxinm/tiktok/pkg/constants"
@@ -12,7 +13,7 @@ import (
 )
 
 func InitUserRpc() {
-	r, err := etcd.NewEtcdResolver([]string{"127.0.0.1"}) //TODO config file
+	r, err := etcd.NewEtcdResolver([]string{config.Etcd.Addr})
 	if err != nil {
 		panic(err)
 	}

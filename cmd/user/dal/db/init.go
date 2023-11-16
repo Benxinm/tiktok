@@ -1,6 +1,7 @@
 package db
 
 import (
+	"github.com/benxinm/tiktok/config"
 	"github.com/benxinm/tiktok/pkg/constants"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
@@ -13,7 +14,7 @@ var DB *gorm.DB
 
 func Init() {
 	var err error
-	DB, err = gorm.Open(mysql.Open(""), //DSN needed
+	DB, err = gorm.Open(mysql.Open(config.GetMysqlDSN()),
 		&gorm.Config{
 			PrepareStmt:            true,
 			SkipDefaultTransaction: true,
@@ -37,5 +38,4 @@ func Init() {
 	sqlDB.SetConnMaxLifetime(constants.ConnMaxLifetime)
 
 	DB = DB.Table(constants.UserTableName)
-
 }

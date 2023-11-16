@@ -1,7 +1,9 @@
 package db
 
 import (
+	"github.com/benxinm/tiktok/config"
 	"github.com/benxinm/tiktok/pkg/constants"
+	"github.com/benxinm/tiktok/pkg/utils"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
 	"gorm.io/gorm/logger"
@@ -10,10 +12,11 @@ import (
 )
 
 var DB *gorm.DB
+var SF *utils.Snowflake
 
 func Init() {
 	var err error
-	DB, err = gorm.Open(mysql.Open(""), //DSN needed
+	DB, err = gorm.Open(mysql.Open(config.GetMysqlDSN()), //DSN needed
 		&gorm.Config{
 			PrepareStmt:            true,
 			SkipDefaultTransaction: true,
@@ -37,5 +40,7 @@ func Init() {
 	sqlDB.SetConnMaxLifetime(constants.ConnMaxLifetime)
 
 	DB = DB.Table(constants.VideoTableName)
-
+	if SF, err = utils.NewSnowflake(constants.SnowflakeDatacenterID, constants.SnowflakeWorkerID); err != nil {
+		panic(err)
+	}
 }
