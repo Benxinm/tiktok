@@ -4,6 +4,9 @@ package api
 
 import (
 	"context"
+	"github.com/benxinm/tiktok/cmd/api/biz/pack"
+	"github.com/benxinm/tiktok/cmd/api/biz/rpc"
+	"github.com/benxinm/tiktok/kitex_gen/interaction"
 
 	api "github.com/benxinm/tiktok/cmd/api/biz/model/api"
 	"github.com/cloudwego/hertz/pkg/app"
@@ -17,12 +20,20 @@ func FavoriteAction(ctx context.Context, c *app.RequestContext) {
 	var req api.FavoriteActionRequest
 	err = c.BindAndValidate(&req)
 	if err != nil {
-		c.String(consts.StatusBadRequest, err.Error())
+		pack.FailResponse(c, err)
 		return
 	}
 
 	resp := new(api.FavoriteActionResponse)
-
+	err = rpc.FavoriteAction(ctx, &interaction.FavoriteActionRequest{
+		Token:      req.Token,
+		VideoId:    req.VideoID,
+		ActionType: req.ActionType,
+	})
+	if err != nil {
+		pack.FailResponse(c, err)
+		return
+	}
 	c.JSON(consts.StatusOK, resp)
 }
 
@@ -33,12 +44,20 @@ func FavoriteList(ctx context.Context, c *app.RequestContext) {
 	var req api.FavoriteListRequest
 	err = c.BindAndValidate(&req)
 	if err != nil {
-		c.String(consts.StatusBadRequest, err.Error())
+		pack.FailResponse(c, err)
 		return
 	}
 
 	resp := new(api.FavoriteListResponse)
-
+	videoList, err := rpc.FavoriteList(ctx, &interaction.FavoriteListRequest{
+		UserId: req.UserID,
+		Token:  req.Token,
+	})
+	if err != nil {
+		pack.FailResponse(c, err)
+		return
+	}
+	resp.VideoList = pack.VideoListFavorited(videoList)
 	c.JSON(consts.StatusOK, resp)
 }
 
@@ -49,12 +68,23 @@ func CommentAction(ctx context.Context, c *app.RequestContext) {
 	var req api.CommentActionRequest
 	err = c.BindAndValidate(&req)
 	if err != nil {
-		c.String(consts.StatusBadRequest, err.Error())
+		pack.FailResponse(c, err)
 		return
 	}
 
 	resp := new(api.CommentActionResponse)
-
+	comment, err := rpc.CommentAction(ctx, &interaction.CommentActionRequest{
+		VideoId:     req.VideoID,
+		ActionType:  req.ActionType,
+		CommentText: req.CommentText,
+		CommentId:   req.CommentID,
+		Token:       req.Token,
+	})
+	if err != nil {
+		pack.FailResponse(c, err)
+		return
+	}
+	resp.Comment = pack.Comment(comment)
 	c.JSON(consts.StatusOK, resp)
 }
 
@@ -65,11 +95,20 @@ func CommentList(ctx context.Context, c *app.RequestContext) {
 	var req api.CommentListRequest
 	err = c.BindAndValidate(&req)
 	if err != nil {
-		c.String(consts.StatusBadRequest, err.Error())
+		pack.FailResponse(c, err)
 		return
 	}
 
 	resp := new(api.CommentListResponse)
+	commentList, err := rpc.CommentList(ctx, &interaction.CommentListRequest{
+		VideoId: req.VideoID,
+		Token:   req.Token,
+	})
 
+	if err != nil {
+		pack.FailResponse(c, err)
+		return
+	}
+	resp.CommentList = pack.CommentList(commentList)
 	c.JSON(consts.StatusOK, resp)
 }

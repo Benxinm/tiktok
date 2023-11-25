@@ -13,4 +13,6 @@ var (
 	FollowNotFoundError = NewMyError(InternalErrorCode, "follow not found but exec unfollow")
 	//Interaction
 	CommentNotFoundError = NewMyError(InternalErrorCode, "comments not found")
+	//Video
+	VideoUploadError = NewMyError(NetworkFailedErrorCode, "Upload Failed")
 )

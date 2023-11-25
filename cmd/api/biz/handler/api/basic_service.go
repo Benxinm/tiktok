@@ -4,6 +4,12 @@ package api
 
 import (
 	"context"
+	"github.com/benxinm/tiktok/cmd/api/biz/pack"
+	"github.com/benxinm/tiktok/cmd/api/biz/rpc"
+	"github.com/benxinm/tiktok/kitex_gen/user"
+	"github.com/benxinm/tiktok/kitex_gen/video"
+	"github.com/benxinm/tiktok/pkg/myerrors"
+	"io"
 
 	api "github.com/benxinm/tiktok/cmd/api/biz/model/api"
 	"github.com/cloudwego/hertz/pkg/app"
@@ -17,12 +23,23 @@ func Feed(ctx context.Context, c *app.RequestContext) {
 	var req api.FeedRequest
 	err = c.BindAndValidate(&req)
 	if err != nil {
-		c.String(consts.StatusBadRequest, err.Error())
+		pack.FailResponse(c, err)
 		return
 	}
 
 	resp := new(api.FeedResponse)
 
+	videoList, nexttime, err := rpc.VideoFeed(ctx, &video.FeedRequest{
+		LatestTime: req.LatestTime,
+		Token:      req.Token,
+	})
+
+	if err != nil {
+		pack.FailResponse(c, err)
+		return
+	}
+	resp.VideoList = pack.VideoList(videoList)
+	resp.NextTime = nexttime
 	c.JSON(consts.StatusOK, resp)
 }
 
@@ -33,12 +50,20 @@ func UserRegister(ctx context.Context, c *app.RequestContext) {
 	var req api.UserRegisterRequest
 	err = c.BindAndValidate(&req)
 	if err != nil {
-		c.String(consts.StatusBadRequest, err.Error())
+		pack.FailResponse(c, err)
 		return
 	}
 
 	resp := new(api.UserRegisterResponse)
+	resp.UserID, resp.Token, err = rpc.UserRegister(ctx, &user.RegisterRequest{
+		Username: req.Username,
+		Password: req.Password,
+	})
 
+	if err != nil {
+		pack.FailResponse(c, err)
+		return
+	}
 	c.JSON(consts.StatusOK, resp)
 }
 
@@ -49,12 +74,21 @@ func UserLogin(ctx context.Context, c *app.RequestContext) {
 	var req api.UserLoginRequest
 	err = c.BindAndValidate(&req)
 	if err != nil {
-		c.String(consts.StatusBadRequest, err.Error())
+		pack.FailResponse(c, err)
 		return
 	}
 
 	resp := new(api.UserLoginResponse)
 
+	resp.UserID, resp.Token, err = rpc.UserLogin(ctx, &user.LoginRequest{
+		Username: req.Username,
+		Password: req.Password,
+	})
+
+	if err != nil {
+		pack.FailResponse(c, err)
+		return
+	}
 	c.JSON(consts.StatusOK, resp)
 }
 
@@ -65,12 +99,20 @@ func UserInfo(ctx context.Context, c *app.RequestContext) {
 	var req api.UserRequest
 	err = c.BindAndValidate(&req)
 	if err != nil {
-		c.String(consts.StatusBadRequest, err.Error())
+		pack.FailResponse(c, err)
 		return
 	}
 
 	resp := new(api.UserResponse)
-
+	user, err := rpc.UserInfo(ctx, &user.InfoRequest{
+		UserId: req.UserID,
+		Token:  req.Token,
+	})
+	if err != nil {
+		pack.FailResponse(c, err)
+		return
+	}
+	resp.User = pack.User(user)
 	c.JSON(consts.StatusOK, resp)
 }
 
@@ -81,12 +123,33 @@ func PublishAction(ctx context.Context, c *app.RequestContext) {
 	var req api.PublishActionRequest
 	err = c.BindAndValidate(&req)
 	if err != nil {
-		c.String(consts.StatusBadRequest, err.Error())
+		pack.FailResponse(c, err)
 		return
 	}
 
 	resp := new(api.PublishActionResponse)
 
+	file, err := c.FormFile("data")
+	content, err := file.Open()
+	if err != nil {
+		pack.FailResponse(c, myerrors.VideoUploadError.AddMessage(err.Error()))
+		return
+	}
+	bytes, err := io.ReadAll(content)
+	if err != nil {
+		pack.FailResponse(c, myerrors.VideoUploadError.AddMessage(err.Error()))
+		return
+	}
+	err = rpc.VideoPublish(ctx, &video.PutVideoRequest{
+		VideoFile: bytes,
+		Title:     req.Title,
+		Token:     req.Token,
+	})
+	if err != nil {
+		pack.FailResponse(c, err)
+		return
+	}
+	resp.StatusCode = myerrors.SuccessCode
 	c.JSON(consts.StatusOK, resp)
 }
 
@@ -97,11 +160,21 @@ func PublishList(ctx context.Context, c *app.RequestContext) {
 	var req api.PublishListRequest
 	err = c.BindAndValidate(&req)
 	if err != nil {
-		c.String(consts.StatusBadRequest, err.Error())
+		pack.FailResponse(c, err)
 		return
 	}
 
 	resp := new(api.PublishListResponse)
 
+	videoList, err := rpc.PublishList(ctx, &video.GetPublishListRequest{
+		Token:  req.Token,
+		UserId: req.UserID,
+	})
+
+	if err != nil {
+		pack.FailResponse(c, err)
+		return
+	}
+	resp.VideoList = pack.VideoList(videoList)
 	c.JSON(consts.StatusOK, resp)
 }

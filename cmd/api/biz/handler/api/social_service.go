@@ -4,6 +4,10 @@ package api
 
 import (
 	"context"
+	"github.com/benxinm/tiktok/cmd/api/biz/pack"
+	"github.com/benxinm/tiktok/cmd/api/biz/rpc"
+	"github.com/benxinm/tiktok/kitex_gen/chat"
+	"github.com/benxinm/tiktok/kitex_gen/follow"
 
 	api "github.com/benxinm/tiktok/cmd/api/biz/model/api"
 	"github.com/cloudwego/hertz/pkg/app"
@@ -17,12 +21,20 @@ func RelationAction(ctx context.Context, c *app.RequestContext) {
 	var req api.RelationActionRequest
 	err = c.BindAndValidate(&req)
 	if err != nil {
-		c.String(consts.StatusBadRequest, err.Error())
+		pack.FailResponse(c, err)
 		return
 	}
 
 	resp := new(api.RelationActionResponse)
-
+	err = rpc.RelationAction(ctx, &follow.ActionRequest{
+		Token:      req.Token,
+		ToUserId:   req.ToUserID,
+		ActionType: req.ActionType,
+	})
+	if err != nil {
+		pack.FailResponse(c, err)
+		return
+	}
 	c.JSON(consts.StatusOK, resp)
 }
 
@@ -33,12 +45,21 @@ func RelationFollowList(ctx context.Context, c *app.RequestContext) {
 	var req api.RelationFollowListRequest
 	err = c.BindAndValidate(&req)
 	if err != nil {
-		c.String(consts.StatusBadRequest, err.Error())
+		pack.FailResponse(c, err)
 		return
 	}
 
 	resp := new(api.RelationFollowListResponse)
+	followList, err := rpc.FollowList(ctx, &follow.FollowListRequest{
+		UserId: req.UserID,
+		Token:  req.Token,
+	})
 
+	if err != nil {
+		pack.FailResponse(c, err)
+		return
+	}
+	resp.UserList = pack.UserList(followList)
 	c.JSON(consts.StatusOK, resp)
 }
 
@@ -49,12 +70,21 @@ func RelationFollowerList(ctx context.Context, c *app.RequestContext) {
 	var req api.RelationFollowerListRequest
 	err = c.BindAndValidate(&req)
 	if err != nil {
-		c.String(consts.StatusBadRequest, err.Error())
+		pack.FailResponse(c, err)
 		return
 	}
 
 	resp := new(api.RelationFollowerListResponse)
+	followList, err := rpc.FollowerList(ctx, &follow.FollowerListRequest{
+		UserId: req.UserID,
+		Token:  req.Token,
+	})
 
+	if err != nil {
+		pack.FailResponse(c, err)
+		return
+	}
+	resp.UserList = pack.UserList(followList)
 	c.JSON(consts.StatusOK, resp)
 }
 
@@ -65,12 +95,20 @@ func RelationFriendList(ctx context.Context, c *app.RequestContext) {
 	var req api.RelationFriendListRequest
 	err = c.BindAndValidate(&req)
 	if err != nil {
-		c.String(consts.StatusBadRequest, err.Error())
+		pack.FailResponse(c, err)
 		return
 	}
 
 	resp := new(api.RelationFriendListResponse)
-
+	followList, err := rpc.FriendList(ctx, &follow.FriendListRequest{
+		UserId: req.UserID,
+		Token:  req.Token,
+	})
+	if err != nil {
+		pack.FailResponse(c, err)
+		return
+	}
+	resp.UserList = pack.FriendList(followList)
 	c.JSON(consts.StatusOK, resp)
 }
 
@@ -81,12 +119,21 @@ func MessageAction(ctx context.Context, c *app.RequestContext) {
 	var req api.MessageActionRequest
 	err = c.BindAndValidate(&req)
 	if err != nil {
-		c.String(consts.StatusBadRequest, err.Error())
+		pack.FailResponse(c, err)
 		return
 	}
 
 	resp := new(api.MessageActionResponse)
-
+	err = rpc.MessageAction(ctx, &chat.MessagePostRequest{
+		Token:      req.Token,
+		ToUserId:   req.ToUserID,
+		ActionType: req.ActionType,
+		Content:    req.Content,
+	})
+	if err != nil {
+		pack.FailResponse(c, err)
+		return
+	}
 	c.JSON(consts.StatusOK, resp)
 }
 
@@ -97,11 +144,19 @@ func MessageChat(ctx context.Context, c *app.RequestContext) {
 	var req api.MessageChatRequest
 	err = c.BindAndValidate(&req)
 	if err != nil {
-		c.String(consts.StatusBadRequest, err.Error())
+		pack.FailResponse(c, err)
 		return
 	}
 
 	resp := new(api.MessageChatResponse)
-
+	messageList, _, err := rpc.MessageList(ctx, &chat.MessageListRequest{
+		Token:    req.Token,
+		ToUserId: req.ToUserID,
+	})
+	if err != nil {
+		pack.FailResponse(c, err)
+		return
+	}
+	resp.MessageList = pack.MessageList(messageList)
 	c.JSON(consts.StatusOK, resp)
 }
