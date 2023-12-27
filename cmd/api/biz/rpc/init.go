@@ -20,4 +20,7 @@ var (
 func Init() {
 	InitUserRpc()
 	InitVideoRpc()
+	InitFollowRpc()
+	InitChatRpc()
+	InitInteractionRpc()
 }
