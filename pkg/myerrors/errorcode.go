@@ -9,4 +9,5 @@ const (
 	InternalErrorCode      = 1002
 	AuthFailedErrorCode    = 1003
 	NetworkFailedErrorCode = 1004
+	UnknownErrorCode       = 1005
 )

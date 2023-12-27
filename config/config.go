@@ -16,6 +16,7 @@ var (
 	Etcd          *etcd
 	OSS           *oss
 	Redis         *redis
+	RabbitMQ      *rabbitmq
 	runtime_viper = viper.New()
 )
 
