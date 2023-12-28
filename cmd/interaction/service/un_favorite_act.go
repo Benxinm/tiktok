@@ -26,5 +26,6 @@ func (s *InteractionService) UnFavorite(req *interaction.FavoriteActionRequest, 
 	if err := cache.ReduceVideoLikeCount(s.ctx, req.VideoId, uid); err != nil {
 		return err
 	}
+	go delayWrite(s.ctx, req.VideoId)
 	return db.UpdateFavoriteStatus(s.ctx, uid, req.VideoId, 0)
 }

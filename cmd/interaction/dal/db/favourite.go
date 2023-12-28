@@ -18,6 +18,15 @@ type Favorite struct {
 	DeletedAt gorm.DeletedAt `gorm:"index"`
 }
 
+type VideoFavourite struct {
+	ID            int64 `json:"id"`
+	VideoID       int64 `json:"video_id"`
+	FavoriteCount int64 `json:"favorite_count"`
+	CreatedAt     time.Time
+	UpdatedAt     time.Time
+	DeletedAt     gorm.DeletedAt `gorm:"index"`
+}
+
 func IsFavorited(ctx context.Context, uid int64, vid int64, status int64) error {
 	var fav Favorite
 	return DB.Table(constants.FavoriteTableName).WithContext(ctx).
@@ -56,13 +65,13 @@ func GetFavouriteVideosByUid(ctx context.Context, uid int64) ([]int64, error) {
 }
 
 func GetVideoFavouriteCount(ctx context.Context, vid int64) (int64, error) {
-	var count int64
-	if err := DB.Table(constants.FavoriteTableName).WithContext(ctx).
-		Where("video_id = ? AND status = 1", vid).Count(&count).Error; err != nil {
+	var vf VideoFavourite
+	if err := DB.Table(constants.VideoFavouriteTableName).WithContext(ctx).Where("video_id = ?", vid).First(vf).Error; err != nil {
 		return 0, err
 	}
-	return count, nil
+	return vf.FavoriteCount, nil
 }
+
 func GetUserFavouriteCount(ctx context.Context, uid int64) (int64, error) {
 	var count int64
 	if err := DB.Table(constants.FavoriteTableName).WithContext(ctx).
@@ -70,4 +79,8 @@ func GetUserFavouriteCount(ctx context.Context, uid int64) (int64, error) {
 		return 0, err
 	}
 	return count, nil
+}
+
+func UpdateVideoFavouriteCount(ctx context.Context, vid int64, count int64) error {
+	return DB.Table(constants.VideoFavouriteTableName).WithContext(ctx).Where("video_id = ?", vid).Update("favourite_count", count).Error
 }
