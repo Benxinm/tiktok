@@ -10,6 +10,7 @@ import (
 const (
 	UserLikeKey       = "user_like"
 	VideoLikeCountKey = "video_like_count"
+	VideoSetKey       = "video_set"
 )
 
 func UserFavoriteKey(uid int64) string {
@@ -29,7 +30,7 @@ func IsVideoFavoriteExist(ctx context.Context, vid int64, uid int64) (bool, erro
 
 func AddVideFavoriteCount(ctx context.Context, vid int64, uid int64) error {
 	pipe := RedisClient.TxPipeline()
-
+	//User favourite list
 	if err := pipe.SAdd(ctx, UserFavoriteKey(uid), strconv.FormatInt(vid, 10)).Err(); err != nil {
 		return err
 	}
@@ -46,7 +47,7 @@ func AddVideFavoriteCount(ctx context.Context, vid int64, uid int64) error {
 
 func ReduceVideoLikeCount(ctx context.Context, vid int64, uid int64) error {
 	pipe := RedisClient.TxPipeline()
-
+	//User favourite list
 	if err := pipe.SRem(ctx, UserFavoriteKey(uid), strconv.FormatInt(vid, 10)).Err(); err != nil {
 		return err
 	}
@@ -61,12 +62,26 @@ func ReduceVideoLikeCount(ctx context.Context, vid int64, uid int64) error {
 	return err
 }
 
+/**
+To implement delay write to db
+*/
+
+func AddVideoSet(ctx context.Context, vid int64, expire time.Duration) error {
+	err := RedisClient.SAdd(ctx, VideoSetKey, strconv.FormatInt(vid, 10)).Err()
+	RedisClient.Expire(ctx, VideoSetKey, expire)
+	return err
+}
+
+func IsVideoInSet(ctx context.Context, vid int64) (bool, error) {
+	return RedisClient.SIsMember(ctx, VideoSetKey, strconv.FormatInt(vid, 10)).Result()
+}
+
+func RemoveVideoSet(ctx context.Context, vid int64) error {
+	return RedisClient.SRem(ctx, VideoSetKey, strconv.FormatInt(vid, 10)).Err()
+}
+
 func SetVideoLikeCount(ctx context.Context, vid int64, count int64) error {
-	err := RedisClient.Set(ctx, VideoFavoriteCountKey(vid), count, time.Hour).Err()
-	if err != nil {
-		return err
-	}
-	return nil
+	return RedisClient.Set(ctx, VideoFavoriteCountKey(vid), count, time.Hour).Err()
 }
 
 func GetVideoLikeCount(ctx context.Context, vid int64) (int64, error) {

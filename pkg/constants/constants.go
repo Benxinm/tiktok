@@ -9,13 +9,14 @@ const (
 	FollowServiceName      = "follow"
 	ChatServiceName        = "chat"
 	//mysql table name
-	UserTableName     = "user"
-	VideoTableName    = "video"
-	FollowTableName   = "follow"
-	CommentTableName  = "comment"
-	FavoriteTableName = "favorite"
-	ChatTableName     = "chat"
-	MessageTableName  = "message"
+	UserTableName           = "user"
+	VideoTableName          = "video"
+	FollowTableName         = "follow"
+	CommentTableName        = "comment"
+	FavoriteTableName       = "favorite"
+	VideoFavouriteTableName = "video_favourite"
+	ChatTableName           = "chat"
+	MessageTableName        = "message"
 	//Redis
 	FollowRedis      = 1
 	InteractionRedis = 2

@@ -53,6 +53,20 @@ create table tiktok.`favorite`
             on delete cascade
 ) engine=InnoDB default charset=utf8mb4;
 
+create table tiktok.`video_favourite`
+(
+    `id` bigint auto_increment not null,
+    `video_id` BIGINT not null ,
+    `favourite_count` INT not null,
+    `created_at` timestamp default current_timestamp not null,
+    `updated_at` timestamp default current_timestamp not null on update current_timestamp,
+    `deleted_at` timestamp default null null,
+    constraint `id`
+        primary key (`id`),
+    index  idx_vid(`video_id`)
+)ENGINE=INNODB DEFAULT CHARSET=utf8mb4;
+
+
 create table tiktok.`comment`
 (
     `id`         bigint auto_increment not null,
