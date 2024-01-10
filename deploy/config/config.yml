@@ -13,12 +13,12 @@ mysql:
   username: tiktok
   password: tiktok
   charset: utf8mb4
-#value needed
+
 oss:
   endpoint: oss-cn-shanghai.aliyuncs.com
-  accessKey-id: LTAI5tEJMyW8bRA4jgSmZvPi
-  accessKey-secret: 7LJoIutd0RHnd8HutnHWwrtmkUubDZ
-  bucketname:
+  accessKey-id: LTAI5tEJMy*****
+  accessKey-secret: 7LJoIutd0RHnd********
+  bucketName: tiktok
   main-directory: tiktok
 
 etcd:
