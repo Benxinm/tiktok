@@ -33,7 +33,7 @@ func main() {
 	// Sentinel 流量治理
 	r.Use(sentinel.SentinelServerMiddleware(
 		sentinel.WithServerResourceExtractor(func(c context.Context, ctx *app.RequestContext) string {
-			return "server_test"
+			return ctx.FullPath()
 		}),
 		sentinel.WithServerBlockFallback(func(ctx context.Context, c *app.RequestContext) {
 			hlog.CtxInfof(ctx, "frequent requests have been rejected by the gateway. clientIP: %v\n", c.ClientIP())
