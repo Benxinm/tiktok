@@ -3,8 +3,8 @@ create table tiktok.`user`
     `id`               bigint auto_increment not null,
     `username`         varchar(255)                                                                 not null unique,
     `password`         varchar(255)                                                                 not null,
-    `avatar`           varchar(255) default 'https://files.ozline.icu/images/avatar.jpg'            not null comment 'url',
-    `background_image` varchar(255) default 'https://files.ozline.icu/images/BannerImg_221116.jpeg' not null comment 'url',
+    `avatar`           varchar(255) default 'https://my-tiktok-video.oss-cn-shanghai.aliyuncs.com/default_avatar.jpg'            not null comment 'url',
+    `background_image` varchar(255) default 'https://my-tiktok-video.oss-cn-shanghai.aliyuncs.com/default_backimg.jpg' not null comment 'url',
     `signature`        varchar(255) default 'NOT NULL BUT SEEMS NULL'                               not null comment '255charmax',
     `created_at`       timestamp    default current_timestamp                                       not null,
     `updated_at`       timestamp    default current_timestamp                                       not null on update current_timestamp comment 'update profile time',
@@ -42,7 +42,7 @@ create table tiktok.`favorite`
     `deleted_at` timestamp default null null,
     constraint `id`
         primary key (`id`),
-    index        `uid_vid_idx` (`user_id`, `video_id`),
+    index  `uid_vid_idx` (`user_id`, `video_id`),
     constraint `favorite_user`
         foreign key (`user_id`)
             references tiktok.`user` (`id`)
@@ -123,8 +123,7 @@ create table tiktok.`message`
     `deleted_at`   timestamp null default null,
     constraint `id`
         primary key (`id`),
-    index(`to_user_id`),
-    index(`from_user_id`),
+    index idx_to_from_user_id (`to_user_id`,`from_user_id`),
     constraint `to_user`
         foreign key (`to_user_id`)
             references tiktok.`user` (`id`)
