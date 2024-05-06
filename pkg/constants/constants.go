@@ -26,6 +26,7 @@ const (
 	MaxQPS             = 100
 	MaxIdleConnections = 10
 	ConnMaxLifetime    = 10 * time.Second
+	OffsetTarget       = 5
 	//jwt
 	JwtSecrete = "jwt_secrete"
 	//RPC

@@ -33,9 +33,9 @@ func GetVideosByIDs(ctx context.Context, ids []int64) ([]Video, error) {
 	return videoResp, nil
 }
 
-func GetVideoByTime(ctx context.Context, lastTime string) ([]Video, error) {
+func GetVideoByTimeUid(ctx context.Context, lastTime string, uid int64) ([]Video, error) {
 	var videoResp []Video
-	if err := DB.WithContext(ctx).Where("created_at<?", lastTime).Order("created_at DESC").Limit(30).Find(&videoResp).Error; err != nil {
+	if err := DB.WithContext(ctx).Where("user_id = ? and created_at<? ", uid, lastTime).Order("created_at DESC").Limit(10).Find(&videoResp).Error; err != nil {
 		return nil, err
 	}
 	return videoResp, nil

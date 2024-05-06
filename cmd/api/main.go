@@ -5,6 +5,8 @@ package main
 import (
 	"context"
 	"fmt"
+	sentinel "github.com/alibaba/sentinel-golang/api"
+	"github.com/alibaba/sentinel-golang/core/flow"
 	"github.com/benxinm/tiktok/cmd/api/biz/rpc"
 	"github.com/benxinm/tiktok/pkg/myerrors"
 	"github.com/cloudwego/hertz/pkg/app"
@@ -13,12 +15,23 @@ import (
 	"github.com/cloudwego/hertz/pkg/common/hlog"
 	hertzUtils "github.com/cloudwego/hertz/pkg/common/utils"
 	"github.com/cloudwego/hertz/pkg/protocol/consts"
-	sentinel "github.com/hertz-contrib/opensergo/sentinel/adapter"
+	hertzSentinel "github.com/hertz-contrib/opensergo/sentinel/adapter"
 )
 
 func Init() {
 	rpc.Init()
-
+	err := sentinel.InitDefault()
+	if err != nil {
+		panic(err)
+	}
+	flow.LoadRules([]*flow.Rule{
+		{
+			Resource:               "/feed",
+			Threshold:              20,
+			TokenCalculateStrategy: flow.Direct,
+			ControlBehavior:        flow.Throttling,
+		},
+	})
 }
 
 func main() {
@@ -29,13 +42,14 @@ func main() {
 		server.WithHandleMethodNotAllowed(true),
 		server.WithMaxRequestBodySize(1<<31),
 	)
+
 	r.Use(recovery.Recovery(recovery.WithRecoveryHandler(recoveryHandler)))
 	// Sentinel 流量治理
-	r.Use(sentinel.SentinelServerMiddleware(
-		sentinel.WithServerResourceExtractor(func(c context.Context, ctx *app.RequestContext) string {
+	r.Use(hertzSentinel.SentinelServerMiddleware(
+		hertzSentinel.WithServerResourceExtractor(func(c context.Context, ctx *app.RequestContext) string {
 			return ctx.FullPath()
 		}),
-		sentinel.WithServerBlockFallback(func(ctx context.Context, c *app.RequestContext) {
+		hertzSentinel.WithServerBlockFallback(func(ctx context.Context, c *app.RequestContext) {
 			hlog.CtxInfof(ctx, "frequent requests have been rejected by the gateway. clientIP: %v\n", c.ClientIP())
 			c.AbortWithStatusJSON(400, hertzUtils.H{
 				"status_msg":  "too many request; the quota used up",

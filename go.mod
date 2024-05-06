@@ -5,12 +5,15 @@ go 1.20
 replace github.com/apache/thrift => github.com/apache/thrift v0.13.0
 
 require (
+	github.com/alibaba/sentinel-golang v1.0.4
 	github.com/aliyun/aliyun-oss-go-sdk v2.2.8+incompatible
 	github.com/apache/thrift v0.13.0
+	github.com/bytedance/sonic v1.9.1
 	github.com/cloudwego/hertz v0.7.2
 	github.com/cloudwego/kitex v0.7.3
 	github.com/fsnotify/fsnotify v1.6.0
 	github.com/golang-jwt/jwt/v5 v5.0.0
+	github.com/hertz-contrib/opensergo v0.0.1
 	github.com/kitex-contrib/registry-etcd v0.2.0
 	github.com/rabbitmq/amqp091-go v1.9.0
 	github.com/redis/go-redis/v9 v9.0.5
@@ -23,11 +26,9 @@ require (
 
 require (
 	github.com/StackExchange/wmi v0.0.0-20190523213315-cbe66965904d // indirect
-	github.com/alibaba/sentinel-golang v1.0.4 // indirect
 	github.com/beorn7/perks v1.0.1 // indirect
 	github.com/bytedance/go-tagexpr/v2 v2.9.2 // indirect
 	github.com/bytedance/gopkg v0.0.0-20230728082804-614d0af6619b // indirect
-	github.com/bytedance/sonic v1.9.1 // indirect
 	github.com/cespare/xxhash/v2 v2.2.0 // indirect
 	github.com/chenzhuoyu/base64x v0.0.0-20221115062448-fe3a3abad311 // indirect
 	github.com/chenzhuoyu/iasm v0.9.0 // indirect
@@ -53,8 +54,6 @@ require (
 	github.com/hashicorp/hcl v1.0.0 // indirect
 	github.com/henrylee2cn/ameda v1.4.10 // indirect
 	github.com/henrylee2cn/goutil v0.0.0-20210127050712-89660552f6f8 // indirect
-	github.com/hertz-contrib/gzip v0.0.3 // indirect
-	github.com/hertz-contrib/opensergo v0.0.1 // indirect
 	github.com/iancoleman/strcase v0.2.0 // indirect
 	github.com/jhump/protoreflect v1.8.2 // indirect
 	github.com/jinzhu/inflection v1.0.0 // indirect
